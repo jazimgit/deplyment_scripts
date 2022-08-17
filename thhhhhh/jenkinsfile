@@ -1,0 +1,26 @@
+pipeline {
+   agent any
+   stages {
+        stage('CLONING REPO') {
+            steps {
+                sh "rm -rf /var/lib/jenkins/workspace/deployment_pipeline/*"
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'REPO']]])
+            }
+        }
+        stage('REPLACING PARAMETERS') {
+            steps {
+                sh "pwd"
+                sh "ls -la"
+                sh "/opt/script/deployment1.sh $ENV $DESTINATION"
+            }
+        
+        } 
+        
+        stage('COPYING FILES') {
+            steps {
+                sh "ls -la"
+                sh "/opt/script/deployment2.sh $COPY_FOLDER $NAME_OF_FOLDER"
+            }
+        }
+    }
+}
