@@ -1,0 +1,44 @@
+pipeline {
+   agent any
+   stages {
+        stage('Checkout') {
+            steps {
+                sh "rm -rf /var/lib/jenkins/workspace/direct_pipeline/*"
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/jazimgit/DDL_setup.git']]])
+            }
+        }
+        stage('change_in_file') {
+            steps {
+                sh "pwd"
+                sh "ls -la"
+                sh ''' for i in `ls -l | grep ^d | awk '{print $9}'`
+                       do 
+                          mv $i prod_$i
+                       done '''
+                
+                
+                // sh "/opt/script/theo.sh $ENV"
+            }
+        
+        } 
+        stage('change_name_of_folder') {
+            steps {
+                sh ''' for ch in `find . -name sp_change_name.sql`
+                       do
+                          sed -i s/__BQ_PROJECT__/PROJECT_ID/g $ch
+                       done '''
+                    }
+                
+                
+                // sh "/opt/script/theo.sh $ENV"
+            }
+        
+        
+        stage('copy_file') {
+            steps {
+                sh "ls -l"
+                // sh "/opt/script/copy_theo.sh $COPY_FOLDER $NAME_OF_FOLDER"
+            }
+        }
+    }
+}

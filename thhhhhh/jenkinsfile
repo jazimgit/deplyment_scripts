@@ -9,8 +9,7 @@ pipeline {
         }
         stage('REPLACING PARAMETERS') {
             steps {
-                sh "pwd"
-                sh "ls -la"
+
                 sh "/opt/script/deployment1.sh $ENV $DESTINATION"
             }
         
@@ -18,7 +17,7 @@ pipeline {
         
         stage('COPYING FILES') {
             steps {
-                sh "ls -la"
+                
                 sh "/opt/script/deployment2.sh $COPY_FOLDER $NAME_OF_FOLDER"
             }
         }
